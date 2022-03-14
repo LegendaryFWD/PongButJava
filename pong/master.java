@@ -6,6 +6,8 @@ import java.awt.image.BufferStrategy;
 
 public class master extends Canvas implements Runnable{
     
+    rect r = new rect(5,5,5,35);
+    
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
 
@@ -61,9 +63,11 @@ public class master extends Canvas implements Runnable{
         
         Graphics g = b.getDrawGraphics();
         
-        g.setColor(Color.RED);
+        g.setColor(Color.GRAY);
         g.fillRect(0, 0, WIDTH, HEIGHT);
-        
+
+        r.draw(g, Color.BLUE);
+      
         g.dispose();
         b.show();
     }
