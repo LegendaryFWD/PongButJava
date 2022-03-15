@@ -3,10 +3,16 @@ package pong;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
+import javax.swing.JFrame;
+
 
 public class master extends Canvas implements Runnable{
     
-    rect r = new rect(5,5,5,35);
+    rect player = new rect(5,5,7,65);
+    rect bot = new rect(770,5,7,65);
+    ball bola = new ball(400,400,10,10);
+    KeyHandler k = new KeyHandler();
+    
     
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
@@ -16,7 +22,7 @@ public class master extends Canvas implements Runnable{
 
     
     public master(){
-        new display(WIDTH, HEIGHT, "Pong v1.01", this);
+        new display(WIDTH, HEIGHT, "Pong", this);
     }
     
     public synchronized void start(){
@@ -47,6 +53,7 @@ public class master extends Canvas implements Runnable{
             LastUpd = ag;
             while(delta  >= 1){
                 update();
+                handleInput();
                 delta--;
                 render();
             }
@@ -65,15 +72,40 @@ public class master extends Canvas implements Runnable{
         
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+        
 
-        r.draw(g, Color.BLUE);
-      
+        player.draw(g, Color.BLUE);
+        bot.draw(g, Color.RED);
+        bola.draw(g, Color.MAGENTA);
+
+        g.setColor(Color.GREEN);
+        
         g.dispose();
         b.show();
     }
     
+    
     private void update(){
+        bola.update();
+    }
+    
+    private void handleInput(){
+        if(k.CheckW()){
+            if(player.y > 3){
+                 player.y -= 3;
+            }
+             
+        }
+        else if(k.CheckS()){
+             if(player.y < 800 - 110){
+                 player.y += 3;
+             }
+             
+        }
+    }
 
+    public void AddListener(JFrame j){
+        j.addKeyListener(k);
     }
     
     public static void main(String[] args){
