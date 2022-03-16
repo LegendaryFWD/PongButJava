@@ -10,8 +10,10 @@ public class master extends Canvas implements Runnable{
     
     rect player = new rect(5,5,7,65);
     rect bot = new rect(770,5,7,65);
-    ball bola = new ball(400,400,10,10);
-    KeyHandler k = new KeyHandler();
+    ball bola = new ball(400,300,10,10);
+    status s = new status();
+    Font ft = new Font("CozetteVector", Font.PLAIN, 36);
+    keys k = new keys();
     
     
     private static final int WIDTH = 800;
@@ -20,10 +22,14 @@ public class master extends Canvas implements Runnable{
     private Thread thread;
     private boolean running = false;
 
+
     
     public master(){
         new display(WIDTH, HEIGHT, "Pong", this);
     }
+    
+    
+    
     
     public synchronized void start(){
         thread = new Thread(this);
@@ -45,8 +51,8 @@ public class master extends Canvas implements Runnable{
     @Override
     public void run(){
         long LastUpd = System.nanoTime();
-        final double ns = 1000000000.0 / 60;
-        double delta = 0;  
+        final double ns = 1000000000.0 / 60; 
+        double delta = 0;
         while(running){
             long ag = System.nanoTime();
             delta += (ag - LastUpd) / ns;
@@ -77,8 +83,11 @@ public class master extends Canvas implements Runnable{
         player.draw(g, Color.BLUE);
         bot.draw(g, Color.RED);
         bola.draw(g, Color.MAGENTA);
+        g.setColor(Color.BLACK);
 
-        g.setColor(Color.GREEN);
+        g.setFont(ft);
+
+        g.drawString(s.playerP + " | " + s.enemyP, 325, 50);
         
         g.dispose();
         b.show();
@@ -86,7 +95,18 @@ public class master extends Canvas implements Runnable{
     
     
     private void update(){
-        bola.update();
+        bola.update(player, bot, s);
+        if(bola.y <= 800 - 110 || bola.y < 3){
+            if(bola.y > bot.y + (bot.h/2)){
+                bot.y += 2;
+            }
+            if(bola.y < bot.y + (bot.h/2)){
+                bot.y -= 2;
+            }
+        }
+        if(s.enemyP == 6 || s.playerP == 6){
+            reset();
+        }
     }
     
     private void handleInput(){
@@ -100,10 +120,19 @@ public class master extends Canvas implements Runnable{
              if(player.y < 800 - 110){
                  player.y += 3;
              }
-             
         }
+        
     }
 
+    public void reset(){
+        soundhndl.playSound("death.wav");
+        player = new rect(5,5,7,65);
+        bot = new rect(770,5,7,65);
+        s = new status();
+        bola.start();
+        run();
+    }
+    
     public void AddListener(JFrame j){
         j.addKeyListener(k);
     }
