@@ -55,13 +55,13 @@ public class ball {
             yDir = -yDir;
         }
         
-        if(x < -5){
+        if(x < p.x - 2){
             s.enemyP += 1;
             x = 400;
             y = 350;
             soundhndl.playSound("hit.wav");
         }
-        if(x > 800){
+        if(x > b.x + 2){
             s.playerP += 1;
             x = 400;
             y = 350;
