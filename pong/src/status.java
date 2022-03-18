@@ -1,4 +1,4 @@
-package pong;
+package src;
 public class status {
         public int enemyP;
         public int playerP;
